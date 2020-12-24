@@ -81,8 +81,8 @@ Following the initial blob detection, the blobs are pruned by a combination of t
 ![pic 7](https://user-images.githubusercontent.com/66870226/102863630-dbc71400-4458-11eb-8cc9-077275a99fec.png)
 ### Fig 6. The original volume, the combined mask, and the mask applied to the original volume, respectively.
 
--The combined mask is applied to the initial blobs and all blobs whose centers are located outside the mask are removed. 
--The remaining blobs are significantly fewer in number (see Fig. 7 and Table 1).
+- The combined mask is applied to the initial blobs and all blobs whose centers are located outside the mask are removed. 
+- The remaining blobs are significantly fewer in number (see Fig. 7 and Table 1).
 
 ![pic 8](https://user-images.githubusercontent.com/66870226/102863855-32345280-4459-11eb-91e8-87d29c47fc6a.png)
 ### Fig 7. The original volume and the blobs remaining after the combined mask is applied.
