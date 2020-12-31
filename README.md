@@ -245,18 +245,23 @@ cdf  Ib   cdf  Ib 
 ### Data
 - Experiments were run on three different datasets.
 - The first dataset only contained non- asymmetry features, which excludes the asymmetry feature and any features computed on difference images. 
-- The second dataset contained only asymmetry features - the asymmetry feature and those computed on the difference images. 
+- The second dataset contained only asymmetry features 
+- the asymmetry feature and those computed on the difference images. 
 - The final dataset used all 113 features.
 
 ### Feature Selection
-- Because the feature set is small - there are only 113 features used - ranking is unnecessary; after normalization, the features are sent directly to Sequential Forward Selection (SFS). 
-- Two types of experiments were performed - using SFS wrapped around a QDA classifier, and using SFS wrapped around an LDA classifier. Both produced similar results.
+- Because the feature set is small. 
+- There are only 113 features used.
+- Ranking is unnecessary; after normalization, the features are sent directly to Sequential Forward Selection (SFS). 
+- Two types of experiments were performed.
+- Using SFS wrapped around a QDA classifier, and using SFS wrapped around an LDA classifier. Both produced similar results.
 
 ### Cross-Validation and Classification
-- Because there are more non-tumors than tumors, the split between training and testing data is determined by the tumors. 60% of the tumor data, and an equal number of non-tumor data is used for training. 
+- Because there are more non-tumors than tumors, the split between training and testing data is determined by the tumors. 
+- 60% of the tumor data, and an equal number of non-tumor data is used for training. 
 - The remaining data is used for testing. 
-_ Each time an experiment is run, the data is randomly split using this proportion. 
-= For cross-validation, each experiment is carried out 100 times and the classification results are averaged. 
+- Each time an experiment is run, the data is randomly split using this proportion. 
+- For cross-validation, each experiment is carried out 100 times and the classification results are averaged. 
 - LDA, QDA, Naive Bayes (Linear and Quadratic), SVM and a classifier using Mahalanobis distance were used.
 
 ### Results
@@ -264,7 +269,6 @@ _ Each time an experiment is run, the data is randomly split using this proporti
 
 
 ### Limitations, Issues, and Future Work
-
 ### Ground Truth Confusion
 ### Chen-Ping's ground truth
 - The student previously working on this project labeled the ground truth tumors. Unfortunately, some of the tumors were labeled in a way that made results better. 
@@ -319,7 +323,7 @@ _ Each time an experiment is run, the data is randomly split using this proporti
 - It is difficult to compare my results now to those from my previous report. 
 - However, my new masks allowed me to reduce the total number of blobs going into the classification code from approximately 5,000 per brain to approximately 1,500-2,500 while keeping the classification rates the same.
 - Thus, the masks' improvement is undeniable.
-The symmetry features appear to have increased the mean sensitivity rates by ~1.5% and the mean specificity rates by ~2.3%. 2.3% increase in specificity means 175.74 more of the 37,641 non-tumor blobs were classified correctly. 
+- The symmetry features appear to have increased the mean sensitivity rates by ~1.5% and the mean specificity rates by ~2.3%. 2.3% increase in specificity means 175.74 more of the 37,641 non-tumor blobs were classified correctly. 
 - QDA had the best specificity, while LDA had the best sensitivity. 
 - Taking the total testing false positives achieved by QDA and dividing by 8 (since 40% of the 20 brains were used for testing), the final per-brain false positive count is approximately 218.7, down from 325.41.
 - The same calculation done on LDA results yields 294.3 false positives per brain, down from 401.89.
