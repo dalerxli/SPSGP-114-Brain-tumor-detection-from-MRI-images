@@ -116,11 +116,18 @@ Following the initial blob detection, the blobs are pruned by a combination of t
 
 ### The volumes 
 
+![9](https://user-images.githubusercontent.com/66870226/103407431-af13aa80-4b84-11eb-9a96-9e692a65f836.png)
+### Fig. 9: Original Volume
+
 - The first volume is the original volume, masked by a dilated brain mask in order to keep the true voxel values at the edges of the brain (see Fig. 9).
 - The second volume is the absolute deviation volume (see Fig. 10). This is obtained the same way as the absolute intensity deviation mask but without thresholding. 
 - Thus, each value in this volume represents the absolute difference between the voxel's original intensity and the mean intensity of the brain-only voxels from the original volume. 
 - The third volume is obtained by smoothing the original volume with a 3D Gaussian filter. For a blob with sigma value , features for this blob are computed using the volume that was smoothed by a 3D Gaussian filter with the same.
 - This allows for features to be computed at the blob's own scale, reducing "noise" from other scales. See Fig. 12 for all smoothed volumes. 
+
+![10](https://user-images.githubusercontent.com/66870226/103407473-d2d6f080-4b84-11eb-8927-afb9d8d791f0.png)
+### Fig. 10: Deviation Volume
+
 - The fourth volume had been computed during the blob acquisition stage - the LoG volume. 
 - LoG volumes are obtained by filtering the original.
 volume with 3D Laplacian of Gaussian filters with 1, 2, 3,...,16 .
@@ -135,3 +142,125 @@ volume with 3D Laplacian of Gaussian filters with 1, 2, 3,...,16 .
 - Since we are only interested in the blob, this extra region needs to be removed. 
 - This is done by applying the prior, which gives more weight to the bright/dark blob and less to the normal brain tissue across the MSP from it.
 
+![11](https://user-images.githubusercontent.com/66870226/103407515-f9952700-4b84-11eb-83ac-2d1da824e130.png)
+### Fig. 11 The absolute difference image of the original volume (left) and the same absolute difference image after the intensity deviation prior is applied (right). Only the weighted image was used for feature extraction.
+
+![12](https://user-images.githubusercontent.com/66870226/103407562-1e899a00-4b85-11eb-84a8-1c71f24e1433.png)
+### Fig. 12 The smoothed volumes obtained using Gaussian filters with increasing sigma values.
+
+![13](https://user-images.githubusercontent.com/66870226/103407606-3f51ef80-4b85-11eb-98d6-547d1677743e.png)
+### Fig. 13 The LoG volumes obtained using LoG filters with increasing sigma values. The LoG values in these images are rescaled to [0,255] to make feature extraction the same for each volume.
+
+![14](https://user-images.githubusercontent.com/66870226/103407644-63153580-4b85-11eb-8c3b-b9f9b895ba70.png)
+### Fig. 14 The absolute difference images of the smoothed volumes obtained using Gaussian filters with increasing sigma values. Note that these are nor weighted by the prior and hence are not used for feature extraction.
+
+![15](https://user-images.githubusercontent.com/66870226/103407682-89d36c00-4b85-11eb-91c2-88bce7386b04.png)
+### Fig. 15 The absolute difference images of the smoothed volumes obtained using Gaussian filters with increasing sigma values. Note that these are weighted by the prior and are the ones used for feature extraction.
+
+![16](https://user-images.githubusercontent.com/66870226/103407718-ad96b200-4b85-11eb-94e0-c7b730f93061.png)
+### Fig. 16 The absolute difference images of the LoG volumes obtained using LoG filters with increasing sigma values.Note that these are nor weighted by the prior and hence are not used for feature extraction.
+
+![17](https://user-images.githubusercontent.com/66870226/103407798-f64e6b00-4b85-11eb-8ae8-3ca1a2baa449.png)
+### Fig. 17 The absolute difference images of the LoG volumes obtained using LoG filters with increasing sigma values. Note that these are weighted by the prior and are the ones used for feature extraction.
+
+## The features
+
+- Each blob begins with 5 features from the pruning stage 
+- the x, y, and z coordinates of its center, the sigma value of the LoG filter producing the blob, and the LoG value of this blob.
+- Of these, only the LoG value is used for classification since the classifier should be invariant to the size and location of tumors.
+- The next 91 features are statistical features - 13 features from each of the 7 volumes.
+- The mean, median, variance, standard deviation, minimum, maximum, skewness, kurtosis, 5th and 6th central moments, uniformity, entropy and smoothness are computed over the voxels within the volume of a given blob.
+- The next 7 features (1 feature from each volume) measure shape.
+- The "shape" of each blob is estimated using compactness, computed as follows.
+- Let Vb be the set of voxels within the volume of blob b. 
+
+I  I ,
+x	x
+ 
+I  I ,
+y	y
+ 
+I    I
+z	z
+ 
+- Compute at each voxel in Vb . 
+- Create the structure tensor for the blob, where the summation is over all voxels in Vb :
+
+ ∑ I 2	∑ I I	∑ I I  
+	x	x    y	x  z 
+T    ∑ I I	∑ I 2	∑ I  I
+	x    y	y	y    z 
+ 
+∑ I  I
+ 
+∑ I I
+ 
+∑ I 2 
+ 
+	x   z	y   z	z     
+
+- Then the compactness, Cb , for the blob is given by:
+
+C   max 1, 2, 3 
+min 1, 2, 3 
+
+- Where 1 , 2 , 3 are the eigenvalues of T. 
+- Compactness values closer to 1 indicate the blob is more spherical, while values high values indicate the blob is elongated.
+- The next 7 features (1 feature from each volume) are Gaussian-weighted intensity measures. 
+- Unlike the mean, which gives equal weight to all voxel intensities within the blob, the Gaussian- weighted intensity gives more weight to values closer to the center of the blob. 
+- The Gaussian weights are obtained using a Gaussian having a sigma equal to that of the blob.
+- The final 7 features (1 feature from each volume) measure strict asymmetry.
+- If Vb is the set of voxels within the volume of blob b, and Vb is the set of voxels within an equal-sized volume centered at the symmetrical center of blob b, then the asymmetry of blob b is given by the Mallow's Distance (equivalent to the Earthmover's Distance) :
+
+Ab 
+ 
+∑
+all bins
+ 
+cdf  Ib   cdf  Ib 
+ 
+- where
+- Ib is the set of intensity values of the voxels in Vb ,
+ 
+- Ib is the set of intensity values of the
+ 
+- voxels in Vb , and cdf gives the cumulative distribution histogram. 
+- This histogram has 256 bins, one for each possible intensity value.
+
+### Classification and Evaluation
+
+- The goal of this project was to test the efficacy of the new asymmetry features obtained. 
+- As much has changed over the course of this project, comparing current results to previous results would be unfair. 
+- The blobs are now obtained using 8 more scales, allowing for more granularity. 
+- They are also pruned by a combination of masks and filters that take into account more than just asymmetry. 
+- These differences make the dataset entering the classification step different from before.
+- Because of this, I decided to test the feature effects on the new dataset only.
+
+### Preprocessing
+- Each blob was compared to the ground truth and received a label of tumor or non-tumor.
+- To receive a label of tumor, the blob's center must be located within the volume of the ground truth tumor. 
+- The blobs from all brains are then pooled into one dataset. 
+- At the beginning of each experiment, the features of the training and testing datasets are normalized to [0,1] to avoid bias.
+
+### Data
+- Experiments were run on three different datasets.
+- The first dataset only contained non- asymmetry features, which excludes the asymmetry feature and any features computed on difference images. 
+- The second dataset contained only asymmetry features - the asymmetry feature and those computed on the difference images. 
+- The final dataset used all 113 features.
+
+### Feature Selection
+- Because the feature set is small - there are only 113 features used - ranking is unnecessary; after normalization, the features are sent directly to Sequential Forward Selection (SFS). 
+- Two types of experiments were performed - using SFS wrapped around a QDA classifier, and using SFS wrapped around an LDA classifier. Both produced similar results.
+
+### Cross-Validation and Classification
+- Because there are more non-tumors than tumors, the split between training and testing data is determined by the tumors. 60% of the tumor data, and an equal number of non-tumor data is used for training. 
+- The remaining data is used for testing. 
+_ Each time an experiment is run, the data is randomly split using this proportion. 
+= For cross-validation, each experiment is carried out 100 times and the classification results are averaged. 
+- LDA, QDA, Naive Bayes (Linear and Quadratic), SVM and a classifier using Mahalanobis distance were used.
+
+### Results
+Results of these experiments and feature analysis can be seen in Appendix I.
+
+
+### 4.	Limitations, Issues, and Future Work
