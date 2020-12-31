@@ -260,7 +260,52 @@ _ Each time an experiment is run, the data is randomly split using this proporti
 - LDA, QDA, Naive Bayes (Linear and Quadratic), SVM and a classifier using Mahalanobis distance were used.
 
 ### Results
-Results of these experiments and feature analysis can be seen in Appendix I.
+- Results of these experiments and feature analysis can be seen in Appendix I.
 
 
-### 4.	Limitations, Issues, and Future Work
+### Limitations, Issues, and Future Work
+
+### Ground Truth Confusion
+### Chen-Ping's ground truth
+- The student previously working on this project labeled the ground truth tumors. Unfortunately, some of the tumors were labeled in a way that made results better. 
+- For instance, if a blob was found on a tip of a tumor, that blob was recorded to be the ground truth, not the entire tumor. 
+- I decided to re-label the ground truth (see Appendix III for the most significant labeling changes). 
+- My ground truth tumors tend to overestimate the tumors, while Chen-Ping's underestimate. 
+- I also found a few large holes that were missed. Although they may not be tumors, they are abnormalities that our algorithm should still be picking up.
+- The results with my ground truth are significantly worse than with Chen-Ping's ground truth (see Appendix II). 
+- I could not figure out why.
+
+### Labeling the blobs
+- My experiments from the mid-project report used data with a different labeling scheme than I am using right now.
+- Before, for each ground truth tumor, I labeled as tumor the blob whose center was closest.
+- I realized later that in reality, many blobs overlapped the ground truth tumor. 
+- My previous labeling would thus produce many blobs with similar characteristics but with only one labeled as tumor.
+- I have now changed my labeling scheme to label any blob whose center is within a ground truth tumor as a tumor. 
+- The results are affected by this change and can be seen in Appendix IV.
+### Shape Score
+- Using compactness as a shape score may not work for dark regions surrounded by lighter voxels.
+- For instance, blobs that overlap a black line in the brain do now show significant elongation.
+### White lines do now seem to have this issue, however:
+### More features
+- At some point during this project, I obtained features the same way but using voxels inside blobs with multiples of the true blobs' radii. 
+- Unfortunately, this led to dependency issues and created errors in my code that I did not have enough time to fix. While doing this, I experimented with redundancy removal techniques.
+- One technique I had available to me was minimum Redundancy Maximum Relevance (mRMR), but the implementation required me to specify how many features it should return. 
+- Since there is no way to know how many features I should have, I decided to implement a different algorithm - FCBF .
+- This algorithm first uses mutual information to find the most relevant features, then uses approximate Markov Blankets to find which features cover the information of which other features.
+- This allows us to keep only the features that summarize the rest.
+- This algorithm does not have a threshold if all features are first selected to be relevant. 
+- Unfortunately, I was still getting errors and did not have time to figure out how to fix my code. 
+- This may be worthy of investigation later on.
+### Experimental Variables
+- Other feature selection methods can be used and wrapped around other classifiers. 
+- These are all variables that can be experimented with later on.
+### Final Feature Subset
+- I could not figure out how to construct a final "good" feature subset.
+- Ideally, it would be the subset of features that appears in "most" of the runs.
+- The size of this subset, as well as the definition of "most", are ill-defined.
+### Further Analysis
+- As the code is right now, it is difficult to analyze the blobs that were misclassified.
+- Altering the code to allow this type of visualization would provide some insight into how to increase my rates. 
+- From a brief inspection of a handful of misclassified blobs, it appears that small bright structures in the brain are often easily confused for tumors.
+
+
