@@ -308,4 +308,42 @@ _ Each time an experiment is run, the data is randomly split using this proporti
 - Altering the code to allow this type of visualization would provide some insight into how to increase my rates. 
 - From a brief inspection of a handful of misclassified blobs, it appears that small bright structures in the brain are often easily confused for tumors.
 
+### 	Discussion and Conclusion
+## LDA vs. QDA
+- Wrapping SFS around LDA or QDA did not appear to make a significant difference in the results. 
+- I will thus discuss the results of the QDA-wrapped experiments. 
+- Also, Naive Bayes Linear and LDA, as well as Naive Bayes Quadratic and QDA, consistently have the same results. 
+- This is worth investigating further.
+ 
+### Efficacy of Asymmetry Features
+- It is difficult to compare my results now to those from my previous report. 
+- However, my new masks allowed me to reduce the total number of blobs going into the classification code from approximately 5,000 per brain to approximately 1,500-2,500 while keeping the classification rates the same.
+- Thus, the masks' improvement is undeniable.
+The symmetry features appear to have increased the mean sensitivity rates by ~1.5% and the mean specificity rates by ~2.3%. 2.3% increase in specificity means 175.74 more of the 37,641 non-tumor blobs were classified correctly. 
+- QDA had the best specificity, while LDA had the best sensitivity. 
+- Taking the total testing false positives achieved by QDA and dividing by 8 (since 40% of the 20 brains were used for testing), the final per-brain false positive count is approximately 218.7, down from 325.41.
+- The same calculation done on LDA results yields 294.3 false positives per brain, down from 401.89.
+- Although these numbers are high, they can be reduced by further pruning.
+- For instance, right now, many blobs overlap each other and can be removed as redundant.
+- Regarding the feature selection - the results don't have clear winners. 
+- Asymmetry-EMD and compactness features computed on the LoG volume appear in nearly every run of the experiment.
+-  However, other statistics, such as std, max and skewness of the LoG volume are chosen the least. 
+- The original volume, besides in compactness, is usually less chosen than other volumes for a given feature. 
+- Many features are selected very frequently, so it is hard to do analysis. 
+- The length of the average selected feature subset is 87 out of 113.
+- This implies that most of the features work together.
+- Analysis may be easier if the features are grouped into categories.
+- Frequency of category selection may yield more insight into the feature selection problem.
+
+### Comparison to State-of-the-Art
+- Two state-of-the-art papers do similar classification.
+- My results are much better than those of, which achieves 90% sensitivity at the cost of 1600-1800 false positives per head. My results are somewhat comparable to those of. 
+- In, an 89.9% sensitivity is achieved with approximately 34.8 false positives per head.
+- My sensitivity is higher - 96% - at the cost of 8.5 times the false positives per head - 294.3. provides an in-depth analysis of tumor types and gives rates for each type.
+- This can be interesting to compare. Because our datasets are different, however, a true comparison is infeasible. 
+
+### APPENDIX I
+### Charts and Tables - Classification Results
+### A.	No Asymmetry Features - SFS with QDA
+
 
