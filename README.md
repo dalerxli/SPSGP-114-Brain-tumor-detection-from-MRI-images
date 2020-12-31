@@ -112,4 +112,26 @@ Following the initial blob detection, the blobs are pruned by a combination of t
 
 ## 3.2	Feature Extraction
 
+- Usable features are extracted using seven volumes.
+
+### The volumes 
+
+- The first volume is the original volume, masked by a dilated brain mask in order to keep the true voxel values at the edges of the brain (see Fig. 9).
+- The second volume is the absolute deviation volume (see Fig. 10). This is obtained the same way as the absolute intensity deviation mask but without thresholding. 
+- Thus, each value in this volume represents the absolute difference between the voxel's original intensity and the mean intensity of the brain-only voxels from the original volume. 
+- The third volume is obtained by smoothing the original volume with a 3D Gaussian filter. For a blob with sigma value , features for this blob are computed using the volume that was smoothed by a 3D Gaussian filter with the same.
+- This allows for features to be computed at the blob's own scale, reducing "noise" from other scales. See Fig. 12 for all smoothed volumes. 
+- The fourth volume had been computed during the blob acquisition stage - the LoG volume. 
+- LoG volumes are obtained by filtering the original.
+volume with 3D Laplacian of Gaussian filters with 1, 2, 3,...,16 .
+- These same sigma values are used in smoothing and are the only sigma values that blobs may have. 
+- Once again, features computed for a blob with sigma value  are obtained using the LoG volume that resulted from filtering with a LoG having the same See Fig. 13 for all LoG volumes.
+- The next three images are the absolute difference images of the original volume (Fig. 11), the smoothed volumes (Fig. 14, 15), and the LoG volumes (Fig. 16,17), weighted by an intensity deviation prior, and are used as measures of asymmetry. 
+- The intensity deviation prior is simply the absolute deviation volume divided by its own maximum value, thus giving values between 0 and 1 at each voxel. 
+- It is used to offset the effects of taking the absolute value of the difference image. 
+- When a difference image is obtained, a bright asymmetric blob in the original volume will remain bright (although less so).
+- A dark asymmetric blob in the original volume will have negative values. To give bright and dark blobs the same footing in the asymmetry image, an absolute value is taken. 
+- This, however, leads to symmetric asymmetry the region opposite a light or dark asymmetric blob will have values that are the same as those of the blob, indicating the same degree of asymmetry. 
+- Since we are only interested in the blob, this extra region needs to be removed. 
+- This is done by applying the prior, which gives more weight to the bright/dark blob and less to the normal brain tissue across the MSP from it.
 
