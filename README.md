@@ -348,6 +348,26 @@ cdf  Ib   cdf  Ib 
 
 ### APPENDIX I
 ### Charts and Tables - Classification Results
+
+### A.	No Asymmetry Features - SFS with QDA
+![A1](https://user-images.githubusercontent.com/66870226/103450107-7cc69200-4cd7-11eb-9431-6d6baa5faaf9.png)
+
+### No Asymmetry Features - SFS with LDA
+![A](https://user-images.githubusercontent.com/66870226/103450108-7df7bf00-4cd7-11eb-842e-4186e26ae434.png)
+
+### B.	Only Asymmetry Features - SFS with QDA
+![b](https://user-images.githubusercontent.com/66870226/103450149-2dcd2c80-4cd8-11eb-96a9-b09888a2dbdf.png)
+
+### Only Asymmetry Features - SFS with LDA
+![b1](https://user-images.githubusercontent.com/66870226/103450156-42112980-4cd8-11eb-8186-e67b80185d9d.png)
+
+### C.	All Features - SFS with QDA
+![c](https://user-images.githubusercontent.com/66870226/103450165-5b19da80-4cd8-11eb-856e-903bade930fa.png)
+
+### All Features - SFS with LDA
+![c1](https://user-images.githubusercontent.com/66870226/103450186-9b795880-4cd8-11eb-8b43-dde5934bed08.png)
+
+### Charts and Tables - Confusion Matrices
 ### A.	No Asymmetry Features - SFS with QDA
 
 
